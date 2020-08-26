@@ -10,7 +10,7 @@ export class DataGetter extends Component {
     componentDidMount = () => this.getData();
 
     getData = () => {
-        const dsData = this.props.product_params || {};
+        const dsData = this.props.products_params || {};
         const rtData = {
             _limit: this.props.pageSize || 5,
             _sort: this.props.sortKey || "name",
