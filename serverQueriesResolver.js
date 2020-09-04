@@ -1,26 +1,22 @@
-const paginateQuery = (query, page = 1, pageSize = 5) => {
+const paginateQuery = (query, page = 1, pageSize = 5) => 
     query.drop((page - 1) * pageSize).take(pageSize);
-};
 
 const product = ({id}, {db}) => db.get("products").getById(id).value();
 
-const products = ({category}, {db}) => ({
+const products = ({ category }, { db}) => ({
     totalSize: () => db.get("products")
         .filter(p => category ? new RegExp(category, "i").test(p.category) : p)
-        .size()
-        .value(),
+        .size().value(),
     products: ({page, pageSize, sort}) => {
         let query = db.get("products");
         if (category) {
-            query = query.filter(item => new RegExp(category, "i").test(item.category));
+            query = query.filter(item => 
+                new RegExp(category, "i").test(item.category))
         }
-        if (sort) {
-            query = query.orderBy(sort);
-        }
-
+        if (sort) { query = query.orderBy(sort) }
         return paginateQuery(query, page, pageSize).value();
     }
-});
+})
 
 const categories = (args, {db}) => db.get("categories").value();
 
@@ -29,9 +25,9 @@ const resolveProducts = (products, db) => products.map(p => ({
     product: product({ id: p.product_id }, {db})
 }));
 
-const resolveOrders = (onlyShipped, { page, pageSize, sort}, {db}) => {
+const resolveOrders = (onlyUnshipped, { page, pageSize, sort}, {db}) => {
     let query = db.get("orders");
-    if (onlyShipped) {
+    if (onlyUnshipped) {
         query = query.filter({ shipped: false });
     }
     if (sort) {
@@ -41,7 +37,7 @@ const resolveOrders = (onlyShipped, { page, pageSize, sort}, {db}) => {
     return paginateQuery(query, page, pageSize).value()
         .map(order => ({
             ...order,
-            products: () => resolveProducts(order.products. db)
+            products: () => resolveProducts(order.products, db)
         }));
 };
 
