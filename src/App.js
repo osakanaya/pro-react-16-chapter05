@@ -4,10 +4,12 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { ShopConnector } from "./shop/ShopConnector";
 import { Admin } from "./admin/Admin";
+import { AuthProviderImpl } from "./auth/AuthProviderImpl";
 
 export default class App extends Component {
   render() {
     return <Provider store={ SportsStoreDataStore }> 
+      <AuthProviderImpl>
         <Router>
           <Switch>
             <Route path="/shop" component={ ShopConnector } />
@@ -15,6 +17,7 @@ export default class App extends Component {
             <Redirect to="/shop" />
           </Switch>
         </Router>
-      </Provider>
+      </AuthProviderImpl>
+    </Provider>
   }
 }
